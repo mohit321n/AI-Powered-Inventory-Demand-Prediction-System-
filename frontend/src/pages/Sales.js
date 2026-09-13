@@ -91,8 +91,8 @@ export default function Sales() {
         {[
           { title: 'Total Orders', value: summary.orderCount, color: '#6c63ff' },
           { title: 'Total Units Sold', value: summary.totalSales, color: '#00c853' },
-          { title: 'Total Revenue', value: `$${summary.totalRevenue.toFixed(2)}`, color: '#ff9800' },
-          { title: 'Avg Order Value', value: `$${summary.avgOrder.toFixed(2)}`, color: '#ff6584' },
+          { title: 'Total Revenue', value: `₹${summary.totalRevenue.toFixed(2)}`, color: '#ff9800' },
+          { title: 'Avg Order Value', value: `₹${summary.avgOrder.toFixed(2)}`, color: '#ff6584' },
         ].map((item, i) => (
           <Grid item xs={12} sm={6} md={3} key={i}>
             <Card className="stat-card">
@@ -142,8 +142,8 @@ export default function Sales() {
                     <Chip label={s.channel} size="small" sx={{ bgcolor: `${getChannelColor(s.channel)}20`, color: getChannelColor(s.channel), fontWeight: 600, fontSize: 11 }} />
                   </td>
                   <td>{s.quantity}</td>
-                  <td>${s.unit_price.toFixed(2)}</td>
-                  <td style={{ color: '#00c853', fontWeight: 600 }}>${s.total.toFixed(2)}</td>
+                  <td>₹{s.unit_price.toFixed(2)}</td>
+                  <td style={{ color: '#00c853', fontWeight: 600 }}>₹{s.total.toFixed(2)}</td>
                 </tr>
               ))}
             </tbody>

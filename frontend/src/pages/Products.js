@@ -153,8 +153,8 @@ export default function Products() {
                     <td style={{ fontWeight: 500 }}>{product.name}</td>
                     <td><Chip label={product.sku} size="small" sx={{ bgcolor: 'rgba(108,99,255,0.1)', color: '#6c63ff', fontSize: 11 }} /></td>
                     <td>{product.category}</td>
-                    <td style={{ color: '#00c853' }}>${product.price.toFixed(2)}</td>
-                    <td>${product.cost.toFixed(2)}</td>
+                    <td style={{ color: '#00c853' }}>₹{product.price.toFixed(2)}</td>
+                    <td>₹{product.cost.toFixed(2)}</td>
                     <td>{product.current_stock || 0} / {product.max_stock}</td>
                     <td><span className={`status-badge ${status.className}`}>{status.label}</span></td>
                     <td>

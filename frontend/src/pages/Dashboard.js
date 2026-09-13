@@ -94,7 +94,7 @@ export default function Dashboard() {
 
   const statCards = [
     { title: 'Total Products', value: stats?.total_products || 0, icon: <Inventory />, color: '#6c63ff', change: '+12%', up: true },
-    { title: 'Inventory Value', value: `$${(stats?.total_inventory_value || 0).toLocaleString()}`, icon: <AttachMoney />, color: '#00c853', change: '+8%', up: true },
+    { title: 'Inventory Value', value: `₹${(stats?.total_inventory_value || 0).toLocaleString()}`, icon: <AttachMoney />, color: '#00c853', change: '+8%', up: true },
     { title: 'Low Stock Items', value: stats?.low_stock_count || 0, icon: <Warning />, color: '#ff9800', change: '-3', up: false },
     { title: 'Pending Alerts', value: stats?.pending_alerts || 0, icon: <TrendingUp />, color: '#ff6584', change: '+2', up: true },
   ];

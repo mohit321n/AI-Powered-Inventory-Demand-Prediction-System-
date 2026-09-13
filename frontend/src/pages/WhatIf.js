@@ -204,9 +204,9 @@ export default function WhatIf() {
               <Divider sx={{ borderColor: 'rgba(108,99,255,0.1)', my: 2 }} />
 
               <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
-                <Chip label={`Cost per unit: $${results.cost_per_unit}`} sx={{ bgcolor: 'rgba(255,101,132,0.1)', color: '#ff6584' }} />
+                <Chip label={`Cost per unit: ₹${results.cost_per_unit}`} sx={{ bgcolor: 'rgba(255,101,132,0.1)', color: '#ff6584' }} />
                 <Chip label={`Promotion: ${results.promotion_impact}`} sx={{ bgcolor: 'rgba(108,99,255,0.1)', color: '#6c63ff' }} />
-                <Chip label={`30d Revenue Impact: ${parseFloat(results.revenue_impact_30d) >= 0 ? '+' : ''}$${results.revenue_impact_30d}`} sx={{ bgcolor: parseFloat(results.revenue_impact_30d) >= 0 ? 'rgba(0,200,83,0.1)' : 'rgba(255,23,68,0.1)', color: parseFloat(results.revenue_impact_30d) >= 0 ? '#00c853' : '#ff1744' }} />
+                <Chip label={`30d Revenue Impact: ${parseFloat(results.revenue_impact_30d) >= 0 ? '+' : ''}₹${results.revenue_impact_30d}`} sx={{ bgcolor: parseFloat(results.revenue_impact_30d) >= 0 ? 'rgba(0,200,83,0.1)' : 'rgba(255,23,68,0.1)', color: parseFloat(results.revenue_impact_30d) >= 0 ? '#00c853' : '#ff1744' }} />
               </Box>
             </Card>
           ) : (

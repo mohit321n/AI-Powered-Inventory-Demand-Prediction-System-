@@ -154,8 +154,8 @@ export default function Inventory() {
                   <td style={{ color: t.quantity > 0 ? '#00c853' : '#ff6584', fontWeight: 600 }}>
                     {t.quantity > 0 ? '+' : ''}{t.quantity}
                   </td>
-                  <td>${t.unit_cost.toFixed(2)}</td>
-                  <td>${Math.abs(t.quantity * t.unit_cost).toFixed(2)}</td>
+                  <td>₹{t.unit_cost.toFixed(2)}</td>
+                  <td>₹{Math.abs(t.quantity * t.unit_cost).toFixed(2)}</td>
                   <td color={c.subtitle}>{t.notes}</td>
                 </tr>
               ))}
@@ -185,7 +185,7 @@ export default function Inventory() {
               </FormControl>
             </Grid>
             <Grid item xs={6}><TextField fullWidth label="Quantity" type="number" value={formData.quantity} onChange={(e) => setFormData({ ...formData, quantity: e.target.value })} size="small" /></Grid>
-            <Grid item xs={12}><TextField fullWidth label="Unit Cost ($)" type="number" value={formData.unit_cost} onChange={(e) => setFormData({ ...formData, unit_cost: e.target.value })} size="small" /></Grid>
+            <Grid item xs={12}><TextField fullWidth label="Unit Cost (₹)" type="number" value={formData.unit_cost} onChange={(e) => setFormData({ ...formData, unit_cost: e.target.value })} size="small" /></Grid>
             <Grid item xs={12}><TextField fullWidth label="Notes" multiline rows={2} value={formData.notes} onChange={(e) => setFormData({ ...formData, notes: e.target.value })} size="small" /></Grid>
           </Grid>
         </DialogContent>
