@@ -1,14 +1,19 @@
 import React, { useState } from 'react';
-import { Box, Typography, TextField, Button, Alert, InputAdornment, IconButton } from '@mui/material';
+import { Box, Typography, TextField, Button, Alert, InputAdornment, IconButton, useTheme } from '@mui/material';
 import { Visibility, VisibilityOff, Inventory, Email, Lock } from '@mui/icons-material';
 import api from '../services/api';
 
 export default function Login({ onLogin }) {
+  const theme = useTheme();
+  const isDark = theme.palette.mode === 'dark';
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+
+  const mutedColor = isDark ? 'rgba(255,255,255,0.5)' : 'rgba(0,0,0,0.45)';
+  const iconColor = isDark ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.3)';
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -27,7 +32,6 @@ export default function Login({ onLogin }) {
       if (err.response && err.response.status === 401) {
         setError('Invalid email or password');
       } else {
-        // Demo mode - accept any credentials
         localStorage.setItem('token', 'demo-token');
         onLogin();
         window.location.href = '/';
@@ -44,11 +48,11 @@ export default function Login({ onLogin }) {
             <Inventory sx={{ fontSize: 36, color: '#6c63ff' }} />
           </Box>
           <Typography variant="h4" fontWeight={700} gutterBottom>InvAI</Typography>
-          <Typography variant="body2" color="rgba(255,255,255,0.5)">AI-Powered Inventory Management</Typography>
+          <Typography variant="body2" color={mutedColor}>AI-Powered Inventory Management</Typography>
         </Box>
 
         {error && (
-          <Alert severity="error" sx={{ mb: 3, bgcolor: 'rgba(255,23,68,0.1)', border: '1px solid rgba(255,23,68,0.2)', '& .MuiAlert-icon': { color: '#ff1744' } }}>
+          <Alert severity="error" sx={{ mb: 3 }}>
             {error}
           </Alert>
         )}
@@ -60,11 +64,11 @@ export default function Login({ onLogin }) {
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            sx={{ mb: 2.5, '& .MuiOutlinedInput-root': { borderRadius: 2, '& fieldset': { borderColor: 'rgba(108,99,255,0.2)' }, '&:hover fieldset': { borderColor: '#6c63ff' }, '&.Mui-focused fieldset': { borderColor: '#6c63ff' } } }}
+            sx={{ mb: 2.5, '& .MuiOutlinedInput-root': { borderRadius: 2 } }}
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
-                  <Email sx={{ color: 'rgba(255,255,255,0.3)' }} />
+                  <Email sx={{ color: iconColor }} />
                 </InputAdornment>
               ),
             }}
@@ -75,16 +79,16 @@ export default function Login({ onLogin }) {
             type={showPassword ? 'text' : 'password'}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            sx={{ mb: 3, '& .MuiOutlinedInput-root': { borderRadius: 2, '& fieldset': { borderColor: 'rgba(108,99,255,0.2)' }, '&:hover fieldset': { borderColor: '#6c63ff' }, '&.Mui-focused fieldset': { borderColor: '#6c63ff' } } }}
+            sx={{ mb: 3, '& .MuiOutlinedInput-root': { borderRadius: 2 } }}
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
-                  <Lock sx={{ color: 'rgba(255,255,255,0.3)' }} />
+                  <Lock sx={{ color: iconColor }} />
                 </InputAdornment>
               ),
               endAdornment: (
                 <InputAdornment position="end">
-                  <IconButton onClick={() => setShowPassword(!showPassword)} edge="end" sx={{ color: 'rgba(255,255,255,0.3)' }}>
+                  <IconButton onClick={() => setShowPassword(!showPassword)} edge="end" sx={{ color: iconColor }}>
                     {showPassword ? <VisibilityOff /> : <Visibility />}
                   </IconButton>
                 </InputAdornment>
@@ -111,7 +115,7 @@ export default function Login({ onLogin }) {
         </form>
 
         <Box sx={{ mt: 3, textAlign: 'center' }}>
-          <Typography variant="caption" color="rgba(255,255,255,0.3)">
+          <Typography variant="caption" color={iconColor}>
             Demo: Enter any email and password to login
           </Typography>
         </Box>

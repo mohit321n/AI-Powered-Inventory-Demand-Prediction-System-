@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Grid, Typography, Card, CardContent, Chip, Select, MenuItem, FormControl, InputLabel } from '@mui/material';
+import { Box, Grid, Typography, Card, CardContent, Chip, Select, MenuItem, FormControl, InputLabel, useTheme } from '@mui/material';
 import { TrendingUp, Inventory, Warning, AttachMoney, ArrowUpward, ArrowDownward } from '@mui/icons-material';
 import api from '../services/api';
 import SalesTrendChart from '../charts/SalesTrendChart';
@@ -8,6 +8,8 @@ import TopProductsChart from '../charts/TopProductsChart';
 import InventoryLevelChart from '../charts/InventoryLevelChart';
 
 export default function Dashboard() {
+  const theme = useTheme();
+  const isDark = theme.palette.mode === 'dark';
   const [stats, setStats] = useState(null);
   const [salesTrend, setSalesTrend] = useState([]);
   const [categorySales, setCategorySales] = useState([]);
@@ -15,6 +17,8 @@ export default function Dashboard() {
   const [inventoryLevels, setInventoryLevels] = useState([]);
   const [timeRange, setTimeRange] = useState(30);
   const [loading, setLoading] = useState(true);
+
+  const mutedColor = isDark ? 'rgba(255,255,255,0.5)' : 'rgba(0,0,0,0.45)';
 
   useEffect(() => {
     fetchDashboardData();
@@ -25,10 +29,10 @@ export default function Dashboard() {
     try {
       const [statsRes, salesRes, catRes, topRes, invRes] = await Promise.all([
         api.get('/dashboard/stats').catch(() => ({ data: { total_products: 0, total_inventory_value: 0, low_stock_count: 0, pending_alerts: 0, total_sales_today: 0, sales_change: 0 } })),
-        api.get(`/analytics/sales-trend?days=${timeRange}`).catch(() => ({ data: generateMockSalesTrend() })),
-        api.get('/analytics/category-sales').catch(() => ({ data: generateMockCategorySales() })),
-        api.get('/analytics/top-products').catch(() => ({ data: generateMockTopProducts() })),
-        api.get('/analytics/inventory-levels').catch(() => ({ data: generateMockInventoryLevels() })),
+        api.get(`/dashboard/sales-trends?days=${timeRange}`).catch(() => ({ data: generateMockSalesTrend() })),
+        api.get('/dashboard/category-sales').catch(() => ({ data: generateMockCategorySales() })),
+        api.get('/dashboard/top-products').catch(() => ({ data: generateMockTopProducts() })),
+        api.get('/dashboard/inventory-trends').catch(() => ({ data: generateMockInventoryLevels() })),
       ]);
       setStats(statsRes.data);
       setSalesTrend(salesRes.data);
@@ -100,11 +104,11 @@ export default function Dashboard() {
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
         <Box>
           <Typography variant="h4" fontWeight={700}>Dashboard</Typography>
-          <Typography variant="body2" color="rgba(255,255,255,0.5)">Overview of your inventory and sales performance</Typography>
+          <Typography variant="body2" color={mutedColor}>Overview of your inventory and sales performance</Typography>
         </Box>
         <FormControl size="small" sx={{ minWidth: 140 }}>
-          <InputLabel sx={{ color: 'rgba(255,255,255,0.5)' }}>Time Range</InputLabel>
-          <Select value={timeRange} label="Time Range" onChange={(e) => setTimeRange(e.target.value)} sx={{ color: '#fff', '& .MuiOutlinedInput-notchedOutline': { borderColor: 'rgba(108,99,255,0.3)' } }}>
+          <InputLabel>Time Range</InputLabel>
+          <Select value={timeRange} label="Time Range" onChange={(e) => setTimeRange(e.target.value)}>
             <MenuItem value={7}>Last 7 days</MenuItem>
             <MenuItem value={30}>Last 30 days</MenuItem>
             <MenuItem value={90}>Last 90 days</MenuItem>
@@ -128,8 +132,8 @@ export default function Dashboard() {
                     sx={{ bgcolor: card.up ? 'rgba(0,200,83,0.12)' : 'rgba(255,23,68,0.12)', color: card.up ? '#00c853' : '#ff1744', fontWeight: 600, fontSize: 11 }}
                   />
                 </Box>
-                <Typography variant="h4" fontWeight={700} color="#fff">{card.value}</Typography>
-                <Typography variant="body2" color="rgba(255,255,255,0.5)" sx={{ mt: 0.5 }}>{card.title}</Typography>
+                <Typography variant="h4" fontWeight={700}>{card.value}</Typography>
+                <Typography variant="body2" color={mutedColor} sx={{ mt: 0.5 }}>{card.title}</Typography>
               </CardContent>
             </Card>
           </Grid>
