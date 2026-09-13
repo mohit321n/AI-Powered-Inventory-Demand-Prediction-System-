@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Typography, Card, Button, Chip, IconButton, Grid, Badge } from '@mui/material';
-import { Warning, Error, Info, CheckCircle, MarkEmailRead, Delete, FilterList } from '@mui/icons-material';
+import { Box, Typography, Card, Button, Chip, IconButton, Grid } from '@mui/material';
+import { Warning, Error, Info, CheckCircle, MarkEmailRead, Delete } from '@mui/icons-material';
 import api from '../services/api';
+import useThemeColors from '../services/useThemeColors';
 
 export default function Alerts() {
+  const c = useThemeColors();
   const [alerts, setAlerts] = useState([]);
   const [filter, setFilter] = useState('all');
   const [loading, setLoading] = useState(true);
@@ -23,30 +25,23 @@ export default function Alerts() {
         { id: 5, type: 'seasonal', severity: 'medium', title: 'Seasonal Pattern', message: 'Laptop Stand sales typically increase 40% in September, consider early restock', product: 'Laptop Stand', created_at: '2026-09-10T11:30:00', read: true },
         { id: 6, type: 'anomaly', severity: 'high', title: 'Sales Anomaly', message: 'Unusual return rate detected for Mechanical Keyboard (15% in last 7 days)', product: 'Mechanical Keyboard', created_at: '2026-09-10T09:00:00', read: true },
         { id: 7, type: 'reorder', severity: 'low', title: 'Optimal Reorder Time', message: 'Based on lead times, now is the optimal time to reorder Yoga Mats', product: 'Yoga Mat', created_at: '2026-09-09T15:20:00', read: true },
-        { id: 8, type: 'low_stock', severity: 'medium', title: 'Approaching Min Stock', message: 'Running Shoes stock (167) is nearing reorder point (30)', product: 'Running Shoes', created_at: '2026-09-09T10:00:00', read: true },
       ]);
     }
     setLoading(false);
   };
 
   const markAsRead = async (id) => {
-    try {
-      await api.patch(`/alerts/${id}/read`);
-    } catch {}
+    try { await api.patch(`/alerts/${id}/read`); } catch {}
     setAlerts(alerts.map(a => a.id === id ? { ...a, read: true } : a));
   };
 
   const markAllAsRead = async () => {
-    try {
-      await api.post('/alerts/read-all');
-    } catch {}
+    try { await api.post('/alerts/read-all'); } catch {}
     setAlerts(alerts.map(a => ({ ...a, read: true })));
   };
 
   const deleteAlert = async (id) => {
-    try {
-      await api.delete(`/alerts/${id}`);
-    } catch {}
+    try { await api.delete(`/alerts/${id}`); } catch {}
     setAlerts(alerts.filter(a => a.id !== id));
   };
 
@@ -73,7 +68,7 @@ export default function Alerts() {
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
         <Box>
           <Typography variant="h4" fontWeight={700}>Alerts</Typography>
-          <Typography variant="body2" color="rgba(255,255,255,0.5)">
+          <Typography variant="body2" color={c.subtitle}>
             {unreadCount > 0 ? `You have ${unreadCount} unread alert${unreadCount > 1 ? 's' : ''}` : 'All caught up!'}
           </Typography>
         </Box>
@@ -104,7 +99,6 @@ export default function Alerts() {
                 px: 2,
                 bgcolor: filter === f.key ? 'rgba(108,99,255,0.2)' : 'transparent',
                 borderColor: filter === f.key ? '#6c63ff' : 'rgba(108,99,255,0.2)',
-                color: filter === f.key ? '#fff' : 'rgba(255,255,255,0.6)',
                 '&:hover': { borderColor: '#6c63ff', bgcolor: 'rgba(108,99,255,0.1)' },
               }}
             >
@@ -133,10 +127,10 @@ export default function Alerts() {
                       <Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: '#6c63ff' }} />
                     )}
                   </Box>
-                  <Typography variant="body2" color="rgba(255,255,255,0.6)" sx={{ mb: 1 }}>{alert.message}</Typography>
+                  <Typography variant="body2" color={c.textSecondary} sx={{ mb: 1 }}>{alert.message}</Typography>
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                     <Chip label={alert.product} size="small" sx={{ bgcolor: 'rgba(108,99,255,0.1)', color: '#6c63ff', fontSize: 11 }} />
-                    <Typography variant="caption" color="rgba(255,255,255,0.3)">
+                    <Typography variant="caption" color={c.muted}>
                       {new Date(alert.created_at).toLocaleString()}
                     </Typography>
                   </Box>
@@ -147,7 +141,7 @@ export default function Alerts() {
                       <MarkEmailRead fontSize="small" />
                     </IconButton>
                   )}
-                  <IconButton size="small" onClick={() => deleteAlert(alert.id)} sx={{ color: 'rgba(255,255,255,0.3)' }}>
+                  <IconButton size="small" onClick={() => deleteAlert(alert.id)} sx={{ color: c.muted }}>
                     <Delete fontSize="small" />
                   </IconButton>
                 </Box>
@@ -160,7 +154,7 @@ export default function Alerts() {
       {filteredAlerts.length === 0 && (
         <Card className="chart-card" sx={{ textAlign: 'center', py: 6 }}>
           <CheckCircle sx={{ fontSize: 64, color: '#00c853', mb: 2 }} />
-          <Typography variant="h6" color="rgba(255,255,255,0.5)">
+          <Typography variant="h6" color={c.subtitle}>
             {filter === 'unread' ? 'All alerts have been read' : 'No alerts match this filter'}
           </Typography>
         </Card>

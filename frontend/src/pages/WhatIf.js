@@ -2,8 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { Box, Typography, Card, Button, Grid, TextField, Switch, FormControlLabel, Slider, Select, MenuItem, FormControl, InputLabel, Divider, Chip, Alert, AlertTitle } from '@mui/material';
 import { Science, TrendingUp, TrendingDown, Refresh, AutoAwesome } from '@mui/icons-material';
 import api from '../services/api';
+import useThemeColors from '../services/useThemeColors';
 
 export default function WhatIf() {
+  const c = useThemeColors();
   const [products, setProducts] = useState([]);
   const [selectedProduct, setSelectedProduct] = useState('');
   const [scenarios, setScenarios] = useState({
@@ -87,7 +89,7 @@ export default function WhatIf() {
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
         <Box>
           <Typography variant="h4" fontWeight={700}>What-If Analysis</Typography>
-          <Typography variant="body2" color="rgba(255,255,255,0.5)">Simulate scenarios to optimize inventory decisions</Typography>
+          <Typography variant="body2" color={c.subtitle}>Simulate scenarios to optimize inventory decisions</Typography>
         </Box>
         <Button variant="outlined" onClick={resetScenarios} sx={{ borderColor: 'rgba(108,99,255,0.3)', color: '#6c63ff' }}>
           <Refresh sx={{ mr: 1 }} /> Reset
@@ -112,24 +114,24 @@ export default function WhatIf() {
             <Box sx={{ mb: 3 }}>
               <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
                 <Typography variant="body2" fontWeight={500}>Demand Change</Typography>
-                <Chip label={`${scenarios.demandChange > 0 ? '+' : ''}${scenarios.demandChange}%`} size="small" sx={{ bgcolor: scenarios.demandChange > 0 ? 'rgba(0,200,83,0.15)' : scenarios.demandChange < 0 ? 'rgba(255,23,68,0.15)' : 'rgba(255,255,255,0.08)', color: scenarios.demandChange > 0 ? '#00c853' : scenarios.demandChange < 0 ? '#ff1744' : '#fff', fontWeight: 600 }} />
+                <Chip label={`${scenarios.demandChange > 0 ? '+' : ''}${scenarios.demandChange}%`} size="small" sx={{ bgcolor: scenarios.demandChange > 0 ? 'rgba(0,200,83,0.15)' : scenarios.demandChange < 0 ? 'rgba(255,23,68,0.15)' : 'rgba(108,99,255,0.08)', color: scenarios.demandChange > 0 ? '#00c853' : scenarios.demandChange < 0 ? '#ff1744' : '#6c63ff', fontWeight: 600 }} />
               </Box>
               <Slider value={scenarios.demandChange} onChange={(e, v) => setScenarios({ ...scenarios, demandChange: v })} min={-50} max={100} step={5} sx={{ color: '#6c63ff' }} />
               <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                <Typography variant="caption" color="rgba(255,255,255,0.3)">-50%</Typography>
-                <Typography variant="caption" color="rgba(255,255,255,0.3)">+100%</Typography>
+                <Typography variant="caption" color={c.muted}>-50%</Typography>
+                <Typography variant="caption" color={c.muted}>+100%</Typography>
               </Box>
             </Box>
 
             <Box sx={{ mb: 3 }}>
               <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
                 <Typography variant="body2" fontWeight={500}>Lead Time Change</Typography>
-                <Chip label={`${scenarios.leadTimeChange > 0 ? '+' : ''}${scenarios.leadTimeChange} days`} size="small" sx={{ bgcolor: scenarios.leadTimeChange > 0 ? 'rgba(255,152,0,0.15)' : scenarios.leadTimeChange < 0 ? 'rgba(0,200,83,0.15)' : 'rgba(255,255,255,0.08)', color: scenarios.leadTimeChange > 0 ? '#ff9800' : scenarios.leadTimeChange < 0 ? '#00c853' : '#fff', fontWeight: 600 }} />
+                <Chip label={`${scenarios.leadTimeChange > 0 ? '+' : ''}${scenarios.leadTimeChange} days`} size="small" sx={{ bgcolor: scenarios.leadTimeChange > 0 ? 'rgba(255,152,0,0.15)' : scenarios.leadTimeChange < 0 ? 'rgba(0,200,83,0.15)' : 'rgba(108,99,255,0.08)', color: scenarios.leadTimeChange > 0 ? '#ff9800' : scenarios.leadTimeChange < 0 ? '#00c853' : '#6c63ff', fontWeight: 600 }} />
               </Box>
               <Slider value={scenarios.leadTimeChange} onChange={(e, v) => setScenarios({ ...scenarios, leadTimeChange: v })} min={-5} max={14} step={1} sx={{ color: '#ff9800' }} />
               <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                <Typography variant="caption" color="rgba(255,255,255,0.3)">-5 days</Typography>
-                <Typography variant="caption" color="rgba(255,255,255,0.3)">+14 days</Typography>
+                <Typography variant="caption" color={c.muted}>-5 days</Typography>
+                <Typography variant="caption" color={c.muted}>+14 days</Typography>
               </Box>
             </Box>
 
@@ -192,7 +194,7 @@ export default function WhatIf() {
                 ].map((item, i) => (
                   <Grid item xs={6} sm={4} key={i}>
                     <Box sx={{ p: 2, borderRadius: 2, bgcolor: 'rgba(108,99,255,0.05)', border: '1px solid rgba(108,99,255,0.1)' }}>
-                      <Typography variant="caption" color="rgba(255,255,255,0.5)">{item.label}</Typography>
+                      <Typography variant="caption" color={c.subtitle}>{item.label}</Typography>
                       <Typography variant="h6" fontWeight={700} color={item.color}>{item.value}</Typography>
                     </Box>
                   </Grid>
@@ -211,8 +213,8 @@ export default function WhatIf() {
             <Card className="scenario-card" sx={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', textAlign: 'center', py: 8 }}>
               <Box>
                 <Science sx={{ fontSize: 80, color: 'rgba(108,99,255,0.2)', mb: 2 }} />
-                <Typography variant="h6" color="rgba(255,255,255,0.4)">Configure parameters and run analysis</Typography>
-                <Typography variant="body2" color="rgba(255,255,255,0.25)">Adjust sliders to simulate different scenarios</Typography>
+                <Typography variant="h6" color={c.subtitle}>Configure parameters and run analysis</Typography>
+                <Typography variant="body2" color={c.muted}>Adjust sliders to simulate different scenarios</Typography>
               </Box>
             </Card>
           )}

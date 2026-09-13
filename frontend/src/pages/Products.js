@@ -2,8 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { Box, Typography, Card, Button, TextField, Select, MenuItem, FormControl, InputLabel, IconButton, Dialog, DialogTitle, DialogContent, DialogActions, Chip, Grid, InputAdornment } from '@mui/material';
 import { Add, Edit, Delete, Search, FilterList } from '@mui/icons-material';
 import api from '../services/api';
+import useThemeColors from '../services/useThemeColors';
 
 export default function Products() {
+  const c = useThemeColors();
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [search, setSearch] = useState('');
@@ -101,7 +103,7 @@ export default function Products() {
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3, flexWrap: 'wrap', gap: 2 }}>
         <Box>
           <Typography variant="h4" fontWeight={700}>Products</Typography>
-          <Typography variant="body2" color="rgba(255,255,255,0.5)">Manage your product catalog</Typography>
+          <Typography variant="body2" color={c.subtitle}>Manage your product catalog</Typography>
         </Box>
         <Button variant="contained" startIcon={<Add />} onClick={() => handleOpenModal()} sx={{ background: 'linear-gradient(135deg, #6c63ff, #5a52d5)', px: 3 }}>
           Add Product
@@ -115,12 +117,12 @@ export default function Products() {
             placeholder="Search products..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            sx={{ flex: 1, minWidth: 200, '& .MuiOutlinedInput-root': { borderRadius: 2, bgcolor: 'rgba(108,99,255,0.05)', '& fieldset': { borderColor: 'rgba(108,99,255,0.2)' } } }}
-            InputProps={{ startAdornment: <InputAdornment position="start"><Search sx={{ color: 'rgba(255,255,255,0.3)' }} /></InputAdornment> }}
+            sx={{ flex: 1, minWidth: 200, '& .MuiOutlinedInput-root': { borderRadius: 2, bgcolor: c.inputBg } }}
+            InputProps={{ startAdornment: <InputAdornment position="start"><Search sx={{ color: c.muted }} /></InputAdornment> }}
           />
           <FormControl size="small" sx={{ minWidth: 160 }}>
-            <InputLabel sx={{ color: 'rgba(255,255,255,0.5)' }}>Category</InputLabel>
-            <Select value={categoryFilter} label="Category" onChange={(e) => setCategoryFilter(e.target.value)} sx={{ borderRadius: 2, '& .MuiOutlinedInput-notchedOutline': { borderColor: 'rgba(108,99,255,0.2)' } }}>
+            <InputLabel>Category</InputLabel>
+            <Select value={categoryFilter} label="Category" onChange={(e) => setCategoryFilter(e.target.value)} sx={{ borderRadius: 2 }}>
               <MenuItem value="all">All Categories</MenuItem>
               {categories.map(c => <MenuItem key={c} value={c}>{c}</MenuItem>)}
             </Select>
@@ -148,7 +150,7 @@ export default function Products() {
                 const status = getStockStatus(product.current_stock || 0, product.min_stock, product.max_stock);
                 return (
                   <tr key={product.id}>
-                    <td style={{ color: '#fff', fontWeight: 500 }}>{product.name}</td>
+                    <td style={{ fontWeight: 500 }}>{product.name}</td>
                     <td><Chip label={product.sku} size="small" sx={{ bgcolor: 'rgba(108,99,255,0.1)', color: '#6c63ff', fontSize: 11 }} /></td>
                     <td>{product.category}</td>
                     <td style={{ color: '#00c853' }}>${product.price.toFixed(2)}</td>
@@ -167,8 +169,8 @@ export default function Products() {
         </Box>
       </Card>
 
-      <Dialog open={openModal} onClose={handleCloseModal} PaperProps={{ sx: { bgcolor: '#1a1a2e', border: '1px solid rgba(108,99,255,0.2)', borderRadius: 3, minWidth: 480 } }}>
-        <DialogTitle sx={{ color: '#fff', fontWeight: 700 }}>{editingProduct ? 'Edit Product' : 'Add New Product'}</DialogTitle>
+      <Dialog open={openModal} onClose={handleCloseModal} PaperProps={{ sx: { bgcolor: c.dialogBg, border: `1px solid ${c.borderLight}`, borderRadius: 3, minWidth: 480 } }}>
+        <DialogTitle sx={{ fontWeight: 700 }}>{editingProduct ? 'Edit Product' : 'Add New Product'}</DialogTitle>
         <DialogContent>
           <Grid container spacing={2} sx={{ mt: 1 }}>
             <Grid item xs={12}><TextField fullWidth label="Product Name" value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} size="small" /></Grid>
@@ -177,7 +179,7 @@ export default function Products() {
               <FormControl fullWidth size="small">
                 <InputLabel>Category</InputLabel>
                 <Select value={formData.category} label="Category" onChange={(e) => setFormData({ ...formData, category: e.target.value })}>
-                  {['Electronics', 'Accessories', 'Sports', 'Home & Garden', 'Clothing', 'Books'].map(c => <MenuItem key={c} value={c}>{c}</MenuItem>)}
+                  {['Electronics', 'Accessories', 'Sports', 'Home & Garden', 'Clothing', 'Books'].map(cat => <MenuItem key={cat} value={cat}>{cat}</MenuItem>)}
                 </Select>
               </FormControl>
             </Grid>
@@ -189,7 +191,7 @@ export default function Products() {
           </Grid>
         </DialogContent>
         <DialogActions sx={{ px: 3, pb: 3 }}>
-          <Button onClick={handleCloseModal} sx={{ color: 'rgba(255,255,255,0.5)' }}>Cancel</Button>
+          <Button onClick={handleCloseModal}>Cancel</Button>
           <Button variant="contained" onClick={handleSubmit} disabled={!formData.name || !formData.price} sx={{ background: 'linear-gradient(135deg, #6c63ff, #5a52d5)' }}>
             {editingProduct ? 'Update' : 'Create'}
           </Button>

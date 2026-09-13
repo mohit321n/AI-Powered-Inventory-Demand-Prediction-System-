@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Typography, Card, Button, Grid, Select, MenuItem, FormControl, InputLabel, Slider, Chip, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Alert, AlertTitle } from '@mui/material';
-import { TrendingUp, AutoAwesome, Refresh, ShoppingBasket } from '@mui/icons-material';
+import { Box, Typography, Card, Button, Grid, Select, MenuItem, FormControl, InputLabel, Slider, Chip, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
+import { TrendingUp, AutoAwesome, ShoppingBasket } from '@mui/icons-material';
 import api from '../services/api';
 import DemandForecastChart from '../charts/DemandForecastChart';
+import useThemeColors from '../services/useThemeColors';
 
 export default function Forecast() {
+  const c = useThemeColors();
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [selectedProduct, setSelectedProduct] = useState('');
@@ -97,7 +99,7 @@ export default function Forecast() {
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
         <Box>
           <Typography variant="h4" fontWeight={700}>Demand Forecasting</Typography>
-          <Typography variant="body2" color="rgba(255,255,255,0.5)">AI-powered demand predictions and reorder recommendations</Typography>
+          <Typography variant="body2" color={c.subtitle}>AI-powered demand predictions and reorder recommendations</Typography>
         </Box>
         <Button variant="contained" startIcon={<AutoAwesome />} onClick={generateForecast} disabled={loading || (!selectedProduct && !selectedCategory)} sx={{ background: 'linear-gradient(135deg, #6c63ff, #ff6584)', px: 3, py: 1.2 }}>
           {loading ? 'Generating...' : 'Generate Forecast'}
@@ -118,12 +120,12 @@ export default function Forecast() {
             <FormControl fullWidth size="small">
               <InputLabel>Select Category</InputLabel>
               <Select value={selectedCategory} label="Select Category" onChange={(e) => { setSelectedCategory(e.target.value); setSelectedProduct(''); }}>
-                {categories.map(c => <MenuItem key={c} value={c}>{c}</MenuItem>)}
+                {categories.map(cat => <MenuItem key={cat} value={cat}>{cat}</MenuItem>)}
               </Select>
             </FormControl>
           </Grid>
           <Grid item xs={12} sm={4}>
-            <Typography variant="caption" color="rgba(255,255,255,0.5)">Forecast Period: {forecastPeriod} days</Typography>
+            <Typography variant="caption" color={c.subtitle}>Forecast Period: {forecastPeriod} days</Typography>
             <Slider value={forecastPeriod} onChange={(e, v) => setForecastPeriod(v)} min={7} max={90} step={7} sx={{ color: '#6c63ff' }} />
           </Grid>
         </Grid>
@@ -148,16 +150,16 @@ export default function Forecast() {
                   <Table>
                     <TableHead>
                       <TableRow>
-                        <TableCell sx={{ color: 'rgba(255,255,255,0.7)', fontWeight: 600 }}>Model</TableCell>
-                        <TableCell sx={{ color: 'rgba(255,255,255,0.7)', fontWeight: 600 }}>MAPE (%)</TableCell>
-                        <TableCell sx={{ color: 'rgba(255,255,255,0.7)', fontWeight: 600 }}>RMSE</TableCell>
-                        <TableCell sx={{ color: 'rgba(255,255,255,0.7)', fontWeight: 600 }}>Accuracy (%)</TableCell>
+                        <TableCell sx={{ fontWeight: 600 }}>Model</TableCell>
+                        <TableCell sx={{ fontWeight: 600 }}>MAPE (%)</TableCell>
+                        <TableCell sx={{ fontWeight: 600 }}>RMSE</TableCell>
+                        <TableCell sx={{ fontWeight: 600 }}>Accuracy (%)</TableCell>
                       </TableRow>
                     </TableHead>
                     <TableBody>
                       {modelComparison.map((m, i) => (
-                        <TableRow key={i} sx={{ '&:hover': { bgcolor: 'rgba(108,99,255,0.05)' } }}>
-                          <TableCell sx={{ color: '#fff', fontWeight: 500 }}>
+                        <TableRow key={i}>
+                          <TableCell sx={{ fontWeight: 500 }}>
                             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                               {m.model === 'Ensemble' && <AutoAwesome sx={{ fontSize: 16, color: '#ff9800' }} />}
                               {m.model}
@@ -201,19 +203,19 @@ export default function Forecast() {
                     </Box>
                     <Grid container spacing={1}>
                       <Grid item xs={6}>
-                        <Typography variant="caption" color="rgba(255,255,255,0.5)">Current Stock</Typography>
+                        <Typography variant="caption" color={c.subtitle}>Current Stock</Typography>
                         <Typography variant="body2" fontWeight={600}>{rec.current_stock}</Typography>
                       </Grid>
                       <Grid item xs={6}>
-                        <Typography variant="caption" color="rgba(255,255,255,0.5)">Days Left</Typography>
+                        <Typography variant="caption" color={c.subtitle}>Days Left</Typography>
                         <Typography variant="body2" fontWeight={600}>{rec.days_of_stock}d</Typography>
                       </Grid>
                       <Grid item xs={6}>
-                        <Typography variant="caption" color="rgba(255,255,255,0.5)">Order Qty</Typography>
+                        <Typography variant="caption" color={c.subtitle}>Order Qty</Typography>
                         <Typography variant="body2" fontWeight={600} color="#6c63ff">{rec.recommended_order}</Typography>
                       </Grid>
                       <Grid item xs={6}>
-                        <Typography variant="caption" color="rgba(255,255,255,0.5)">Reorder Point</Typography>
+                        <Typography variant="caption" color={c.subtitle}>Reorder Point</Typography>
                         <Typography variant="body2" fontWeight={600}>{rec.reorder_point}</Typography>
                       </Grid>
                     </Grid>
@@ -228,8 +230,8 @@ export default function Forecast() {
       {!forecastGenerated && (
         <Card className="chart-card" sx={{ textAlign: 'center', py: 8 }}>
           <AutoAwesome sx={{ fontSize: 64, color: 'rgba(108,99,255,0.3)', mb: 2 }} />
-          <Typography variant="h6" color="rgba(255,255,255,0.5)">Select a product or category and generate a forecast</Typography>
-          <Typography variant="body2" color="rgba(255,255,255,0.3)">Our AI models will analyze historical data to predict future demand</Typography>
+          <Typography variant="h6" color={c.subtitle}>Select a product or category and generate a forecast</Typography>
+          <Typography variant="body2" color={c.muted}>Our AI models will analyze historical data to predict future demand</Typography>
         </Card>
       )}
     </Box>

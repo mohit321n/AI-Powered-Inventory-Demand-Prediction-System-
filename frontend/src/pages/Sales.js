@@ -2,8 +2,10 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Box, Typography, Card, Button, TextField, Grid, Select, MenuItem, FormControl, InputLabel, Chip, InputAdornment } from '@mui/material';
 import { Upload, Search, CalendarToday, TrendingUp } from '@mui/icons-material';
 import api from '../services/api';
+import useThemeColors from '../services/useThemeColors';
 
 export default function Sales() {
+  const c = useThemeColors();
   const [sales, setSales] = useState([]);
   const [search, setSearch] = useState('');
   const [dateFrom, setDateFrom] = useState('');
@@ -36,11 +38,6 @@ export default function Sales() {
         { id: 3, product_name: 'Laptop Stand', quantity: 3, unit_price: 29.99, total: 89.97, date: '2026-09-11T09:15:00', channel: 'Online', customer: 'Mike R.' },
         { id: 4, product_name: 'USB-C Hub', quantity: 10, unit_price: 34.99, total: 349.90, date: '2026-09-11T16:45:00', channel: 'Wholesale', customer: 'TechCorp' },
         { id: 5, product_name: 'Mechanical Keyboard', quantity: 1, unit_price: 89.99, total: 89.99, date: '2026-09-10T11:30:00', channel: 'Online', customer: 'Alex K.' },
-        { id: 6, product_name: 'Wireless Earbuds', quantity: 8, unit_price: 49.99, total: 399.92, date: '2026-09-10T13:00:00', channel: 'Store', customer: 'Emily W.' },
-        { id: 7, product_name: 'Monitor Light Bar', quantity: 4, unit_price: 44.99, total: 179.96, date: '2026-09-09T10:00:00', channel: 'Online', customer: 'David L.' },
-        { id: 8, product_name: 'Smart Watch', quantity: 3, unit_price: 199.99, total: 599.97, date: '2026-09-09T15:20:00', channel: 'Store', customer: 'Lisa P.' },
-        { id: 9, product_name: 'Laptop Stand', quantity: 15, unit_price: 29.99, total: 449.85, date: '2026-09-08T14:10:00', channel: 'Wholesale', customer: 'OfficePlus' },
-        { id: 10, product_name: 'USB-C Hub', quantity: 2, unit_price: 34.99, total: 69.98, date: '2026-09-08T09:30:00', channel: 'Online', customer: 'Rachel S.' },
       ]);
     }
     setLoading(false);
@@ -72,7 +69,7 @@ export default function Sales() {
 
   const getChannelColor = (channel) => {
     const colors = { Online: '#6c63ff', Store: '#00c853', Wholesale: '#ff9800', 'Marketplace': '#ff6584' };
-    return colors[channel] || '#fff';
+    return colors[channel] || '#999';
   };
 
   const filteredSales = getFilteredSales();
@@ -82,7 +79,7 @@ export default function Sales() {
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3, flexWrap: 'wrap', gap: 2 }}>
         <Box>
           <Typography variant="h4" fontWeight={700}>Sales</Typography>
-          <Typography variant="body2" color="rgba(255,255,255,0.5)">Track sales performance and upload transaction data</Typography>
+          <Typography variant="body2" color={c.subtitle}>Track sales performance and upload transaction data</Typography>
         </Box>
         <Button variant="contained" startIcon={<Upload />} onClick={() => fileInputRef.current.click()} sx={{ background: 'linear-gradient(135deg, #6c63ff, #5a52d5)', px: 3 }}>
           Upload CSV
@@ -100,7 +97,7 @@ export default function Sales() {
           <Grid item xs={12} sm={6} md={3} key={i}>
             <Card className="stat-card">
               <Typography variant="h5" fontWeight={700} sx={{ color: item.color }}>{item.value}</Typography>
-              <Typography variant="caption" color="rgba(255,255,255,0.5)">{item.title}</Typography>
+              <Typography variant="caption" color={c.subtitle}>{item.title}</Typography>
             </Card>
           </Grid>
         ))}
@@ -113,8 +110,8 @@ export default function Sales() {
             placeholder="Search sales..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            sx={{ flex: 1, minWidth: 200, '& .MuiOutlinedInput-root': { borderRadius: 2, bgcolor: 'rgba(108,99,255,0.05)', '& fieldset': { borderColor: 'rgba(108,99,255,0.2)' } } }}
-            InputProps={{ startAdornment: <InputAdornment position="start"><Search sx={{ color: 'rgba(255,255,255,0.3)' }} /></InputAdornment> }}
+            sx={{ flex: 1, minWidth: 200, '& .MuiOutlinedInput-root': { borderRadius: 2, bgcolor: c.inputBg } }}
+            InputProps={{ startAdornment: <InputAdornment position="start"><Search sx={{ color: c.muted }} /></InputAdornment> }}
           />
           <TextField size="small" type="date" label="From" value={dateFrom} onChange={(e) => setDateFrom(e.target.value)} InputLabelProps={{ shrink: true }} sx={{ minWidth: 150 }} />
           <TextField size="small" type="date" label="To" value={dateTo} onChange={(e) => setDateTo(e.target.value)} InputLabelProps={{ shrink: true }} sx={{ minWidth: 150 }} />
@@ -139,7 +136,7 @@ export default function Sales() {
               {filteredSales.map((s) => (
                 <tr key={s.id}>
                   <td>{new Date(s.date).toLocaleDateString()}</td>
-                  <td style={{ color: '#fff', fontWeight: 500 }}>{s.product_name}</td>
+                  <td style={{ fontWeight: 500 }}>{s.product_name}</td>
                   <td>{s.customer}</td>
                   <td>
                     <Chip label={s.channel} size="small" sx={{ bgcolor: `${getChannelColor(s.channel)}20`, color: getChannelColor(s.channel), fontWeight: 600, fontSize: 11 }} />

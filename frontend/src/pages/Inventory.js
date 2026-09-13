@@ -2,8 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { Box, Typography, Card, Button, TextField, Select, MenuItem, FormControl, InputLabel, Grid, Dialog, DialogTitle, DialogContent, DialogActions, Chip, InputAdornment } from '@mui/material';
 import { Add, SwapHoriz, Search, TrendingUp, TrendingDown, Inventory as InventoryIcon } from '@mui/icons-material';
 import api from '../services/api';
+import useThemeColors from '../services/useThemeColors';
 
 export default function Inventory() {
+  const c = useThemeColors();
   const [transactions, setTransactions] = useState([]);
   const [products, setProducts] = useState([]);
   const [search, setSearch] = useState('');
@@ -37,9 +39,6 @@ export default function Inventory() {
         { id: 3, product_name: 'USB-C Hub', type: 'adjustment', quantity: -5, unit_cost: 10.00, date: '2026-09-11T09:15:00', notes: 'Damaged items' },
         { id: 4, product_name: 'Laptop Stand', type: 'purchase', quantity: 200, unit_cost: 8.00, date: '2026-09-10T16:45:00', notes: 'Bulk order' },
         { id: 5, product_name: 'Monitor Light Bar', type: 'sale', quantity: 8, unit_cost: 15.00, date: '2026-09-10T11:30:00', notes: 'Store sale' },
-        { id: 6, product_name: 'Mechanical Keyboard', type: 'return', quantity: 3, unit_cost: 22.00, date: '2026-09-09T13:00:00', notes: 'Customer returns' },
-        { id: 7, product_name: 'Wireless Earbuds', type: 'sale', quantity: 22, unit_cost: 12.50, date: '2026-09-09T10:00:00', notes: 'Bulk order' },
-        { id: 8, product_name: 'Smart Watch', type: 'purchase', quantity: 50, unit_cost: 45.00, date: '2026-09-08T15:20:00', notes: 'Restock' },
       ]);
     }
     setLoading(false);
@@ -60,15 +59,7 @@ export default function Inventory() {
     } catch {
       const product = products.find(p => p.id === parseInt(formData.product_id));
       if (product) {
-        const newTrans = {
-          id: Date.now(),
-          product_name: product.name,
-          type: formData.type,
-          quantity: parseInt(formData.quantity),
-          unit_cost: parseFloat(formData.unit_cost) || 0,
-          date: new Date().toISOString(),
-          notes: formData.notes,
-        };
+        const newTrans = { id: Date.now(), product_name: product.name, type: formData.type, quantity: parseInt(formData.quantity), unit_cost: parseFloat(formData.unit_cost) || 0, date: new Date().toISOString(), notes: formData.notes };
         setTransactions([newTrans, ...transactions]);
       }
       setOpenModal(false);
@@ -78,7 +69,7 @@ export default function Inventory() {
 
   const getTypeColor = (type) => {
     const colors = { purchase: '#00c853', sale: '#6c63ff', adjustment: '#ff9800', return: '#00b0ff', transfer: '#ff6584' };
-    return colors[type] || '#fff';
+    return colors[type] || '#999';
   };
 
   const totalIn = transactions.filter(t => ['purchase', 'return'].includes(t.type)).reduce((sum, t) => sum + Math.abs(t.quantity), 0);
@@ -90,7 +81,7 @@ export default function Inventory() {
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3, flexWrap: 'wrap', gap: 2 }}>
         <Box>
           <Typography variant="h4" fontWeight={700}>Inventory</Typography>
-          <Typography variant="body2" color="rgba(255,255,255,0.5)">Track stock levels and transactions</Typography>
+          <Typography variant="body2" color={c.subtitle}>Track stock levels and transactions</Typography>
         </Box>
         <Button variant="contained" startIcon={<Add />} onClick={() => setOpenModal(true)} sx={{ background: 'linear-gradient(135deg, #6c63ff, #5a52d5)', px: 3 }}>
           New Transaction
@@ -110,7 +101,7 @@ export default function Inventory() {
                 <Box sx={{ width: 48, height: 48, borderRadius: 2, bgcolor: `${item.color}20`, display: 'flex', alignItems: 'center', justifyContent: 'center', color: item.color }}>{item.icon}</Box>
                 <Box>
                   <Typography variant="h5" fontWeight={700}>{item.value}</Typography>
-                  <Typography variant="caption" color="rgba(255,255,255,0.5)">{item.title}</Typography>
+                  <Typography variant="caption" color={c.subtitle}>{item.title}</Typography>
                 </Box>
               </Box>
             </Card>
@@ -125,8 +116,8 @@ export default function Inventory() {
             placeholder="Search transactions..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            sx={{ flex: 1, minWidth: 200, '& .MuiOutlinedInput-root': { borderRadius: 2, bgcolor: 'rgba(108,99,255,0.05)', '& fieldset': { borderColor: 'rgba(108,99,255,0.2)' } } }}
-            InputProps={{ startAdornment: <InputAdornment position="start"><Search sx={{ color: 'rgba(255,255,255,0.3)' }} /></InputAdornment> }}
+            sx={{ flex: 1, minWidth: 200, '& .MuiOutlinedInput-root': { borderRadius: 2, bgcolor: c.inputBg } }}
+            InputProps={{ startAdornment: <InputAdornment position="start"><Search sx={{ color: c.muted }} /></InputAdornment> }}
           />
           <FormControl size="small" sx={{ minWidth: 140 }}>
             <InputLabel>Type</InputLabel>
@@ -156,20 +147,16 @@ export default function Inventory() {
               {filtered.map((t) => (
                 <tr key={t.id}>
                   <td>{new Date(t.date).toLocaleDateString()}</td>
-                  <td style={{ color: '#fff', fontWeight: 500 }}>{t.product_name}</td>
+                  <td style={{ fontWeight: 500 }}>{t.product_name}</td>
                   <td>
-                    <Chip
-                      label={t.type}
-                      size="small"
-                      sx={{ bgcolor: `${getTypeColor(t.type)}20`, color: getTypeColor(t.type), textTransform: 'capitalize', fontWeight: 600, fontSize: 11 }}
-                    />
+                    <Chip label={t.type} size="small" sx={{ bgcolor: `${getTypeColor(t.type)}20`, color: getTypeColor(t.type), textTransform: 'capitalize', fontWeight: 600, fontSize: 11 }} />
                   </td>
                   <td style={{ color: t.quantity > 0 ? '#00c853' : '#ff6584', fontWeight: 600 }}>
                     {t.quantity > 0 ? '+' : ''}{t.quantity}
                   </td>
                   <td>${t.unit_cost.toFixed(2)}</td>
                   <td>${Math.abs(t.quantity * t.unit_cost).toFixed(2)}</td>
-                  <td style={{ color: 'rgba(255,255,255,0.5)' }}>{t.notes}</td>
+                  <td color={c.subtitle}>{t.notes}</td>
                 </tr>
               ))}
             </tbody>
@@ -177,8 +164,8 @@ export default function Inventory() {
         </Box>
       </Card>
 
-      <Dialog open={openModal} onClose={() => setOpenModal(false)} PaperProps={{ sx: { bgcolor: '#1a1a2e', border: '1px solid rgba(108,99,255,0.2)', borderRadius: 3, minWidth: 440 } }}>
-        <DialogTitle sx={{ color: '#fff', fontWeight: 700 }}>New Transaction</DialogTitle>
+      <Dialog open={openModal} onClose={() => setOpenModal(false)} PaperProps={{ sx: { bgcolor: c.dialogBg, border: `1px solid ${c.borderLight}`, borderRadius: 3, minWidth: 440 } }}>
+        <DialogTitle sx={{ fontWeight: 700 }}>New Transaction</DialogTitle>
         <DialogContent>
           <Grid container spacing={2} sx={{ mt: 1 }}>
             <Grid item xs={12}>
@@ -203,7 +190,7 @@ export default function Inventory() {
           </Grid>
         </DialogContent>
         <DialogActions sx={{ px: 3, pb: 3 }}>
-          <Button onClick={() => setOpenModal(false)} sx={{ color: 'rgba(255,255,255,0.5)' }}>Cancel</Button>
+          <Button onClick={() => setOpenModal(false)}>Cancel</Button>
           <Button variant="contained" onClick={handleSubmit} disabled={!formData.product_id || !formData.quantity} sx={{ background: 'linear-gradient(135deg, #6c63ff, #5a52d5)' }}>
             <SwapHoriz sx={{ mr: 1 }} /> Submit
           </Button>
